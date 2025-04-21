@@ -103,7 +103,7 @@ class _PetDetailsScreenState extends State<PetDetailsScreen> {
                                 : null,
                             ),
                             child: widget.pet.imageUrl == null || widget.pet.imageUrl!.isEmpty
-                              ? const Icon(Icons.pets, size: 60, color: Colors.grey)
+                              ? const Icon(Icons.pets, size: 60, color: Color.fromRGBO(203, 186, 186, 1))
                               : null,
                           ),
                           const SizedBox(width: 20),

@@ -14,54 +14,61 @@ class PetCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Calculate pet's age
     final now = DateTime.now();
     final age = now.difference(pet.birthdate);
     final years = age.inDays ~/ 365;
     final months = (age.inDays % 365) ~/ 30;
-    
+
     String ageText;
     if (years > 0) {
-      ageText = months > 0 
+      ageText = months > 0
           ? '$years ${years == 1 ? 'ano' : 'anos'} e $months ${months == 1 ? 'mês' : 'meses'}'
           : '$years ${years == 1 ? 'ano' : 'anos'}';
     } else {
       ageText = '$months ${months == 1 ? 'mês' : 'meses'}';
     }
 
-    // Format the birthdate
     final dateFormat = DateFormat('dd/MM/yyyy');
     final formattedBirthdate = dateFormat.format(pet.birthdate);
 
-    // Determine an icon based on the species
-    IconData petIcon = Icons.pets; // Default icon
+    IconData petIcon = Icons.pets;
 
-    return Card(
-      margin: const EdgeInsets.symmetric(vertical: 8.0),
-      elevation: 2.0,
-      child: InkWell(
-        onTap: onTap,
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 12.0),
+        decoration: BoxDecoration(
+          color: Color.fromRGBO(242, 234, 247, 1),
+          borderRadius: BorderRadius.circular(16.0),
+          boxShadow: [
+            BoxShadow(
+              offset: Offset(0.0, 4.0),
+              blurRadius: 4.0,
+              color: Color.fromRGBO(75, 75, 75, 0.5),
+            ),
+          ],
+        ),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Pet icon or avatar
+              // Pet icon
               Container(
                 width: 60,
                 height: 60,
                 decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(30),
+                  color: Colors.white,
+                  shape: BoxShape.circle,
                 ),
                 child: Icon(
                   petIcon,
-                  size: 36,
-                  color: Theme.of(context).primaryColor,
+                  size: 30,
+                  color: Color.fromRGBO(203, 186, 186, 1),
                 ),
               ),
               const SizedBox(width: 16),
-              // Pet information
+              // Pet details
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -69,28 +76,29 @@ class PetCard extends StatelessWidget {
                     Text(
                       pet.name,
                       style: const TextStyle(
-                        fontSize: 18,
+                        color: Color.fromRGBO(157, 119, 119, 1),
+                        fontSize: 16.0,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    const SizedBox(height: 8),
                     Text(
                       '${pet.species} | ${pet.breed}',
                       style: TextStyle(
                         fontSize: 14,
-                        color: Colors.grey[700],
+                        color: Color.fromRGBO(157, 119, 119, 1),
                       ),
                     ),
                     const SizedBox(height: 4),
                     Row(
                       children: [
-                        Icon(Icons.cake, size: 16, color: Colors.grey[600]),
-                        const SizedBox(width: 4),
+                        Icon(Icons.cake, size: 16, color: Color.fromRGBO(157, 119, 119, 1)),
+                        const SizedBox(width: 8),
                         Text(
                           '$formattedBirthdate ($ageText)',
                           style: TextStyle(
                             fontSize: 14,
-                            color: Colors.grey[700],
+                            color: Color.fromRGBO(157, 119, 119, 1),
                           ),
                         ),
                       ],
@@ -98,25 +106,19 @@ class PetCard extends StatelessWidget {
                     const SizedBox(height: 4),
                     Row(
                       children: [
-                        Icon(Icons.scale, size: 16, color: Colors.grey[600]),
-                        const SizedBox(width: 4),
+                        Icon(Icons.scale, size: 16, color: Color.fromRGBO(157, 119, 119, 1)),
+                        const SizedBox(width: 8),
                         Text(
                           '${pet.weight} kg',
                           style: TextStyle(
                             fontSize: 14,
-                            color: Colors.grey[700],
+                            color: Color.fromRGBO(157, 119, 119, 1),
                           ),
                         ),
                       ],
                     ),
                   ],
                 ),
-              ),
-              // Arrow indicator
-              Icon(
-                Icons.arrow_forward_ios,
-                size: 16,
-                color: Colors.grey[400],
               ),
             ],
           ),
