@@ -24,10 +24,10 @@ class _VaccineFormScreenState extends State<VaccineFormScreen> {
   final _notesController = TextEditingController();
   DateTime _date = DateTime.now();
   DateTime _nextDueDate = DateTime.now().add(Duration(days: 365));
-  
+
   final DatabaseService _databaseService = DatabaseService();
   final NotificationService _notificationService = NotificationService();
-  
+
   Pet? _pet;
   bool _isLoading = true;
   bool _isSaving = false;
@@ -36,7 +36,7 @@ class _VaccineFormScreenState extends State<VaccineFormScreen> {
   void initState() {
     super.initState();
     _loadPet();
-    
+
     if (widget.vaccine != null) {
       _nameController.text = widget.vaccine!.name;
       _notesController.text = widget.vaccine!.notes;
@@ -49,9 +49,9 @@ class _VaccineFormScreenState extends State<VaccineFormScreen> {
     setState(() {
       _isLoading = true;
     });
-    
+
     final pet = await _databaseService.getPetById(widget.petId);
-    
+
     setState(() {
       _pet = pet;
       _isLoading = false;
@@ -96,156 +96,180 @@ class _VaccineFormScreenState extends State<VaccineFormScreen> {
     }
   }
 
-  Future<void> _saveVaccine() async {
-    if (_formKey.currentState!.validate()) {
-      setState(() {
-        _isSaving = true;
-      });
-      try{
-      final vaccine = Vaccine(
-        id: widget.vaccine?.id,
-        petId: widget.petId,
-        name: _nameController.text,
-        date: _date,
-        nextDueDate: _nextDueDate,
-        notes: _notesController.text,
-      );
+  String _formatDate(DateTime date) {
+    return "${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}";
+  }
 
+  Future<void> _saveVaccine() async {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
+    setState(() {
+      _isSaving = true;
+    });
+
+    // Criar o objeto vaccine a partir dos dados do formulário
+    final vaccine = Vaccine(
+      id: widget.vaccine?.id,
+      petId: widget.petId,
+      name: _nameController.text,
+      date: _date,
+      nextDueDate: _nextDueDate,
+      notes: _notesController.text,
+    );
+
+    bool success = false;
+    String errorMessage = 'Erro ao salvar a vacina. Tente novamente.';
+
+    try {
+      // Salvar a vacina no banco de dados
       if (widget.vaccine == null) {
         await _databaseService.insertVaccine(vaccine);
       } else {
         await _databaseService.updateVaccine(vaccine);
       }
-      Navigator.pop(context);
 
-      await _scheduleNotification(vaccine);
-      
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Vacina salva com sucesso!'),
-            backgroundColor: Colors.green,
-          ),
-        );
-        
-        Navigator.pop(context);
-      } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Erro ao salvar a vacina. Tente novamente.'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      } finally {
-        setState(() {
-          _isSaving = false;
-        });
+      // Se chegou aqui sem exceções, a vacina foi salva com sucesso
+      success = true;
+
+      // Agendar notificação
+      if (_pet != null) {
+        try {
+          await _notificationService.scheduleVaccineNotification(
+            _pet!,
+            vaccine,
+          );
+        } catch (e) {
+          print('Erro ao agendar notificação: $e');
+          // Não vamos falhar completamente se apenas a notificação falhar
+        }
       }
+    } catch (e) {
+      print('Erro ao salvar vacina: $e');
+      success = false;
+      errorMessage = 'Erro ao salvar a vacina: ${e.toString()}';
+    } finally {
+      setState(() {
+        _isSaving = false;
+      });
     }
-  }
 
-  Future<void> _scheduleNotification(Vaccine vaccine) async {
-    if (_pet != null) {
-      // Usa o método específico que agenda notificações apenas para esta vacina
-      await _notificationService.scheduleVaccineNotification(_pet!, vaccine);
+    if (success) {
+      // Mensagem de sucesso
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Vacina salva com sucesso!'),
+          backgroundColor: Colors.green,
+          duration: Duration(seconds: 1),
+        ),
+      );
+      await Future.delayed(const Duration(milliseconds: 500));
+      Navigator.of(context).pop(true);
+    } else {
+      // Mensagem de erro
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(errorMessage), backgroundColor: Colors.red),
+      );
     }
-  }
-
-  String _formatDate(DateTime date) {
-    return "${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}";
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.vaccine == null ? 'Adicionar Vacina' : 'Editar Vacina'),
+        title: Text(
+          widget.vaccine == null ? 'Adicionar Vacina' : 'Editar Vacina',
+        ),
       ),
-      body: _isLoading
-          ? Center(child: CircularProgressIndicator())
-          : Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Form(
-                key: _formKey,
-                child: ListView(
-                  children: [
-                    if (_pet != null)
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 16.0),
-                        child: Text(
-                          'Pet: ${_pet!.name}',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
+      body:
+          _isLoading
+              ? Center(child: CircularProgressIndicator())
+              : Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Form(
+                  key: _formKey,
+                  child: ListView(
+                    children: [
+                      if (_pet != null)
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 16.0),
+                          child: Text(
+                            'Pet: ${_pet!.name}',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
+                      TextFormField(
+                        controller: _nameController,
+                        decoration: InputDecoration(
+                          labelText: 'Nome da Vacina',
+                          border: OutlineInputBorder(),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Por favor, informe o nome da vacina';
+                          }
+                          return null;
+                        },
                       ),
-                    TextFormField(
-                      controller: _nameController,
-                      decoration: InputDecoration(
-                        labelText: 'Nome da Vacina',
-                        border: OutlineInputBorder(),
+                      SizedBox(height: 16),
+                      Card(
+                        child: ListTile(
+                          title: Text('Data de Vacinação'),
+                          subtitle: Text(_formatDate(_date)),
+                          trailing: Icon(Icons.calendar_today),
+                          onTap: () => _selectDate(context),
+                        ),
                       ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Por favor, informe o nome da vacina';
-                        }
-                        return null;
-                      },
-                    ),
-                    SizedBox(height: 16),
-                    Card(
-                      child: ListTile(
-                        title: Text('Data de Vacinação'),
-                        subtitle: Text(_formatDate(_date)),
-                        trailing: Icon(Icons.calendar_today),
-                        onTap: () => _selectDate(context),
+                      SizedBox(height: 16),
+                      Card(
+                        child: ListTile(
+                          title: Text('Data da Próxima Vacinação'),
+                          subtitle: Text(_formatDate(_nextDueDate)),
+                          trailing: Icon(Icons.calendar_today),
+                          onTap: () => _selectNextDueDate(context),
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 16),
-                    Card(
-                      child: ListTile(
-                        title: Text('Data da Próxima Vacinação'),
-                        subtitle: Text(_formatDate(_nextDueDate)),
-                        trailing: Icon(Icons.calendar_today),
-                        onTap: () => _selectNextDueDate(context),
+                      SizedBox(height: 16),
+                      TextFormField(
+                        controller: _notesController,
+                        decoration: InputDecoration(
+                          labelText: 'Observações',
+                          border: OutlineInputBorder(),
+                        ),
+                        maxLines: 3,
                       ),
-                    ),
-                    SizedBox(height: 16),
-                    TextFormField(
-                      controller: _notesController,
-                      decoration: InputDecoration(
-                        labelText: 'Observações',
-                        border: OutlineInputBorder(),
+                      SizedBox(height: 32),
+                      ElevatedButton(
+                        onPressed: _isSaving ? null : _saveVaccine,
+                        style: ElevatedButton.styleFrom(
+                          padding: EdgeInsets.symmetric(vertical: 16),
+                        ),
+                        child:
+                            _isSaving
+                                ? Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    SizedBox(
+                                      width: 20,
+                                      height: 20,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                      ),
+                                    ),
+                                    SizedBox(width: 10),
+                                    Text('Salvando...'),
+                                  ],
+                                )
+                                : Text('Salvar'),
                       ),
-                      maxLines: 3,
-                    ),
-                    SizedBox(height: 32),
-                    ElevatedButton(
-                      onPressed: _isSaving ? null : _saveVaccine,
-                      child: _isSaving
-                          ? Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SizedBox(
-                                  width: 20,
-                                  height: 20,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                  ),
-                                ),
-                                SizedBox(width: 10),
-                                Text('Salvando...'),
-                              ],
-                            )
-                          : Text('Salvar'),
-                      style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.symmetric(vertical: 16),
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
     );
   }
 }
