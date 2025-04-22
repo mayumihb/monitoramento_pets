@@ -19,7 +19,9 @@ class _PetFormScreenState extends State<PetFormScreen> {
   String _species = 'Cachorro';
   DateTime _birthdate = DateTime.now();
   final List<String> _speciesList = ['Cachorro', 'Gato', 'Ave', 'Roedor', 'Outro'];
-  
+
+  static const primaryColor = Color(0xFFD3C5E1);
+
   @override
   void initState() {
     super.initState();
@@ -66,7 +68,7 @@ class _PetFormScreenState extends State<PetFormScreen> {
       );
 
       final dbService = DatabaseService();
-      
+
       if (widget.pet == null) {
         await dbService.insertPet(pet);
       } else {
@@ -80,85 +82,107 @@ class _PetFormScreenState extends State<PetFormScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.pet == null ? 'Adicionar Pet' : 'Editar Pet'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: ListView(
+      backgroundColor: Colors.white,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(160),
+        child: Container(
+          color: primaryColor,
+          padding: const EdgeInsets.all(20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              TextFormField(
-                controller: _nameController,
-                decoration: InputDecoration(labelText: 'Nome'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor, informe o nome do pet';
-                  }
-                  return null;
-                },
+              IconButton(
+                icon: const Icon(Icons.arrow_back, color: Colors.white, size: 40),
+                onPressed: () => Navigator.pop(context),
               ),
-              SizedBox(height: 16),
-              DropdownButtonFormField<String>(
-                value: _species,
-                decoration: InputDecoration(labelText: 'Espécie'),
-                items: _speciesList.map((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    _species = newValue!;
-                  });
-                },
-              ),
-              SizedBox(height: 16),
-              TextFormField(
-                controller: _breedController,
-                decoration: InputDecoration(labelText: 'Raça'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor, informe a raça do pet';
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 16),
-              ListTile(
-                title: Text('Data de Nascimento'),
-                subtitle: Text('${_birthdate.day}/${_birthdate.month}/${_birthdate.year}'),
-                trailing: Icon(Icons.calendar_today),
-                onTap: () => _selectDate(context),
-              ),
-              SizedBox(height: 16),
-              TextFormField(
-                controller: _weightController,
-                decoration: InputDecoration(labelText: 'Peso (kg)'),
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor, informe o peso do pet';
-                  }
-                  try {
-                    double.parse(value);
-                  } catch (e) {
-                    return 'Por favor, informe um valor numérico válido';
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 32),
-              ElevatedButton(
-                onPressed: _savePet,
-                child: Text('Salvar'),
-                style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(vertical: 16),
+              Text(
+                widget.pet == null ? 'Adicionar Pet' : 'Editar Pet',
+                style: const TextStyle(
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
                 ),
               ),
+              const SizedBox(width: 40), // espaço para equilibrar o layout
             ],
+          ),
+        ),
+      ),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Form(
+            key: _formKey,
+            child: ListView(
+              children: [
+                TextFormField(
+                  controller: _nameController,
+                  decoration: const InputDecoration(labelText: 'Nome'),
+                  validator: (value) =>
+                      value == null || value.isEmpty ? 'Por favor, informe o nome do pet' : null,
+                ),
+                const SizedBox(height: 16),
+                DropdownButtonFormField<String>(
+                  value: _species,
+                  decoration: const InputDecoration(labelText: 'Espécie'),
+                  items: _speciesList.map((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      _species = newValue!;
+                    });
+                  },
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: _breedController,
+                  decoration: const InputDecoration(labelText: 'Raça'),
+                  validator: (value) =>
+                      value == null || value.isEmpty ? 'Por favor, informe a raça do pet' : null,
+                ),
+                const SizedBox(height: 16),
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: const Text('Data de Nascimento'),
+                  subtitle:
+                      Text('${_birthdate.day}/${_birthdate.month}/${_birthdate.year}'),
+                  trailing: const Icon(Icons.calendar_today),
+                  onTap: () => _selectDate(context),
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: _weightController,
+                  decoration: const InputDecoration(labelText: 'Peso (kg)'),
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Por favor, informe o peso do pet';
+                    }
+                    try {
+                      double.parse(value);
+                    } catch (e) {
+                      return 'Por favor, informe um valor numérico válido';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 32),
+                ElevatedButton(
+                  onPressed: _savePet,
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    backgroundColor: primaryColor,
+                    foregroundColor: Colors.white,
+                    textStyle: const TextStyle(fontSize: 18),
+                  ),
+                  child: const Text('Salvar'),
+                ),
+              ],
+            ),
           ),
         ),
       ),

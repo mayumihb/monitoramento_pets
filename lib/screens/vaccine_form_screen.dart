@@ -32,6 +32,8 @@ class _VaccineFormScreenState extends State<VaccineFormScreen> {
   bool _isLoading = true;
   bool _isSaving = false;
 
+  static const primaryColor = Color(0xFFD3C5E1);
+
   @override
   void initState() {
     super.initState();
@@ -109,7 +111,6 @@ class _VaccineFormScreenState extends State<VaccineFormScreen> {
       _isSaving = true;
     });
 
-    // Criar o objeto vaccine a partir dos dados do formulário
     final vaccine = Vaccine(
       id: widget.vaccine?.id,
       petId: widget.petId,
@@ -153,7 +154,7 @@ class _VaccineFormScreenState extends State<VaccineFormScreen> {
       setState(() {
         _isSaving = false;
       });
-    }
+      }
 
     if (success) {
       // Mensagem de sucesso
@@ -177,16 +178,37 @@ class _VaccineFormScreenState extends State<VaccineFormScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          widget.vaccine == null ? 'Adicionar Vacina' : 'Editar Vacina',
+      backgroundColor: Colors.white,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(160),
+        child: Container(
+          color: primaryColor,
+          padding: const EdgeInsets.all(20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              IconButton(
+                icon: const Icon(Icons.arrow_back, color: Colors.white, size: 40),
+                onPressed: () => Navigator.pop(context),
+              ),
+              Text(
+                widget.vaccine == null ? 'Adicionar Vacina' : 'Editar Vacina',
+                style: const TextStyle(
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+              const SizedBox(width: 40),
+            ],
+          ),
         ),
       ),
-      body:
-          _isLoading
-              ? Center(child: CircularProgressIndicator())
-              : Padding(
-                padding: const EdgeInsets.all(16.0),
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.all(20),
                 child: Form(
                   key: _formKey,
                   child: ListView(
@@ -195,8 +217,8 @@ class _VaccineFormScreenState extends State<VaccineFormScreen> {
                         Padding(
                           padding: const EdgeInsets.only(bottom: 16.0),
                           child: Text(
-                            'Pet: ${_pet!.name}',
-                            style: TextStyle(
+                            'Nome do Pet: ${_pet!.name}',
+                            style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                             ),
@@ -204,72 +226,50 @@ class _VaccineFormScreenState extends State<VaccineFormScreen> {
                         ),
                       TextFormField(
                         controller: _nameController,
-                        decoration: InputDecoration(
-                          labelText: 'Nome da Vacina',
-                          border: OutlineInputBorder(),
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Por favor, informe o nome da vacina';
-                          }
-                          return null;
-                        },
+                        decoration: const InputDecoration(labelText: 'Nome da Vacina'),
+                        validator: (value) =>
+                            value == null || value.isEmpty ? 'Por favor, informe o nome da vacina' : null,
                       ),
-                      SizedBox(height: 16),
-                      Card(
-                        child: ListTile(
-                          title: Text('Data de Vacinação'),
-                          subtitle: Text(_formatDate(_date)),
-                          trailing: Icon(Icons.calendar_today),
-                          onTap: () => _selectDate(context),
-                        ),
+                      const SizedBox(height: 16),
+                      ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        title: const Text('Data da Vacinação'),
+                        subtitle: Text(_formatDate(_date)),
+                        trailing: const Icon(Icons.calendar_today),
+                        onTap: () => _selectDate(context),
                       ),
-                      SizedBox(height: 16),
-                      Card(
-                        child: ListTile(
-                          title: Text('Data da Próxima Vacinação'),
-                          subtitle: Text(_formatDate(_nextDueDate)),
-                          trailing: Icon(Icons.calendar_today),
-                          onTap: () => _selectNextDueDate(context),
-                        ),
+                      const SizedBox(height: 16),
+                      ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        title: const Text('Próxima Vacinação'),
+                        subtitle: Text(_formatDate(_nextDueDate)),
+                        trailing: const Icon(Icons.calendar_today),
+                        onTap: () => _selectNextDueDate(context),
                       ),
-                      SizedBox(height: 16),
+                      const SizedBox(height: 16),
                       TextFormField(
                         controller: _notesController,
-                        decoration: InputDecoration(
-                          labelText: 'Observações',
-                          border: OutlineInputBorder(),
-                        ),
+                        decoration: const InputDecoration(labelText: 'Observações'),
                         maxLines: 3,
                       ),
-                      SizedBox(height: 32),
+                      const SizedBox(height: 32),
                       ElevatedButton(
                         onPressed: _isSaving ? null : _saveVaccine,
                         style: ElevatedButton.styleFrom(
-                          padding: EdgeInsets.symmetric(vertical: 16),
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          backgroundColor: primaryColor,
+                          foregroundColor: Colors.white,
+                          textStyle: const TextStyle(fontSize: 18),
                         ),
-                        child:
-                            _isSaving
-                                ? Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    SizedBox(
-                                      width: 20,
-                                      height: 20,
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 2,
-                                      ),
-                                    ),
-                                    SizedBox(width: 10),
-                                    Text('Salvando...'),
-                                  ],
-                                )
-                                : Text('Salvar'),
+                        child: _isSaving
+                            ? const CircularProgressIndicator(color: Colors.white)
+                            : const Text('Salvar'),
                       ),
                     ],
                   ),
                 ),
               ),
+            ),
     );
   }
 }
