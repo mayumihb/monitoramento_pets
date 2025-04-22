@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:monitoramento_pets/screens/pet_details_screen.dart';
 import '../models/pet.dart';
 import '../services/database_service.dart';
@@ -15,7 +16,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Pet> _pets = [];
   bool _isLoading = true;
 
-  static const primaryColor = Color(0xFFD3C5E1);
+  static const primaryColor = Color(0xFFB3A2C4);
 
   @override
   void initState() {
@@ -56,12 +57,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 onPressed: _loadPets,
               ),
-              const Text(
+              Text(
                 'Meus Pets',
-                style: TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
+                style: GoogleFonts.emilysCandy(
+                  textStyle: TextStyle(
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
                 ),
               ),
               IconButton(
@@ -91,11 +94,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: _isLoading
                     ? const Center(child: CircularProgressIndicator())
                     : _pets.isEmpty
-                        ? const Center(
+                        ? Center(
                             child: Text(
                               'Nenhum pet cadastrado.\nClique no + para adicionar.',
                               textAlign: TextAlign.center,
-                              style: TextStyle(fontSize: 18),
+                              style: GoogleFonts.itim(
+                                textStyle: TextStyle(fontSize: 18)
+                              ),
                             ),
                           )
                         : ListView.builder(

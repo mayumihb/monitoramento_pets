@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../models/pet.dart';
 import '../models/vaccine.dart';
 import '../services/database_service.dart';
@@ -32,7 +33,7 @@ class _VaccineFormScreenState extends State<VaccineFormScreen> {
   bool _isLoading = true;
   bool _isSaving = false;
 
-  static const primaryColor = Color(0xFFD3C5E1);
+  static const primaryColor = Color(0xFFB3A2C4);
 
   @override
   void initState() {
@@ -193,10 +194,12 @@ class _VaccineFormScreenState extends State<VaccineFormScreen> {
               ),
               Text(
                 widget.vaccine == null ? 'Adicionar Vacina' : 'Editar Vacina',
-                style: const TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
+                style: GoogleFonts.emilysCandy( 
+                  textStyle: TextStyle(
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
                 ),
               ),
               const SizedBox(width: 40),
@@ -218,9 +221,11 @@ class _VaccineFormScreenState extends State<VaccineFormScreen> {
                           padding: const EdgeInsets.only(bottom: 16.0),
                           child: Text(
                             'Nome do Pet: ${_pet!.name}',
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
+                            style: GoogleFonts.itim( 
+                              textStyle: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ),

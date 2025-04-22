@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../models/pet.dart';
 import 'package:intl/intl.dart';
 
@@ -75,18 +76,22 @@ class PetCard extends StatelessWidget {
                   children: [
                     Text(
                       pet.name,
-                      style: const TextStyle(
-                        color: Color.fromRGBO(157, 119, 119, 1),
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.bold,
+                      style: GoogleFonts.itim( 
+                        textStyle: TextStyle(
+                          color: Color.fromRGBO(157, 119, 119, 1),
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 8),
                     Text(
                       '${pet.species} | ${pet.breed}',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Color.fromRGBO(157, 119, 119, 1),
+                      style: GoogleFonts.itim( 
+                        textStyle: TextStyle(
+                          fontSize: 14,
+                          color: Color.fromRGBO(157, 119, 119, 1),
+                        ),
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -96,9 +101,11 @@ class PetCard extends StatelessWidget {
                         const SizedBox(width: 8),
                         Text(
                           '$formattedBirthdate ($ageText)',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Color.fromRGBO(157, 119, 119, 1),
+                          style: GoogleFonts.itim( 
+                            textStyle: TextStyle(
+                              fontSize: 14,
+                              color: Color.fromRGBO(157, 119, 119, 1),
+                            ),
                           ),
                         ),
                       ],
@@ -110,9 +117,11 @@ class PetCard extends StatelessWidget {
                         const SizedBox(width: 8),
                         Text(
                           '${pet.weight} kg',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Color.fromRGBO(157, 119, 119, 1),
+                          style: GoogleFonts.itim( 
+                            textStyle: TextStyle(
+                              fontSize: 14,
+                              color: Color.fromRGBO(157, 119, 119, 1),
+                            ),
                           ),
                         ),
                       ],

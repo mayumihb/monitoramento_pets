@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../models/pet.dart';
 import '../models/vaccine.dart';
 import '../services/database_service.dart';
@@ -67,7 +68,7 @@ class _PetDetailsScreenState extends State<PetDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     // Define a theme color matching the Figma design
-    const primaryColor = Color(0xFFD3C5E1); // Light purple/lavender color
+    const primaryColor = Color(0xFFB3A2C4); // Light purple/lavender color
     const cardColor = Color(0xFFF2EAF7); // Lighter purple for vaccine cards
     
     return Scaffold(
@@ -114,33 +115,41 @@ class _PetDetailsScreenState extends State<PetDetailsScreen> {
                               children: [
                                 Text(
                                   widget.pet.name,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 32.0,
-                                    fontWeight: FontWeight.bold
+                                  style: GoogleFonts.emilysCandy(
+                                    textStyle: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 32.0,
+                                      fontWeight: FontWeight.bold
+                                    ),
                                   ),
                                 ),
                                 Text(
                                   'Espécie: ${widget.pet.species} | Raça: ${widget.pet.breed}',
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 20.0,
+                                  style: GoogleFonts.itim( 
+                                    textStyle: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 20.0,
+                                    ),
                                   ),
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
                                   'Nascimento: ${widget.pet.birthdate.day}/${widget.pet.birthdate.month}/${widget.pet.birthdate.year}',
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 20.0,
+                                  style: GoogleFonts.itim( 
+                                    textStyle: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 20.0,
+                                    ),
                                   ),
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
                                   'Peso: ${widget.pet.weight} kg',
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 20.0,
+                                  style: GoogleFonts.itim( 
+                                    textStyle: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 20.0,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -241,40 +250,47 @@ class _PetDetailsScreenState extends State<PetDetailsScreen> {
                                 children: <Widget>[
                                   Text(
                                     'Vacinas',
-                                    style: TextStyle(
-                                      shadows: const <Shadow>[
-                                        Shadow(
-                                          offset: Offset(0.0, 4.0),
-                                          blurRadius: 4.0,
-                                          color: Color.fromARGB(255, 75, 75, 75),
-                                        ),
-                                      ],
-                                      fontSize: 32,
-                                      fontWeight: FontWeight.bold,
-                                      foreground: Paint()
-                                      ..style = PaintingStyle.stroke
-                                      ..strokeWidth = 7
-                                      ..color = Color.fromRGBO(203, 186, 186, 1)
-                                      ..strokeJoin = StrokeJoin.round
+                                    style: GoogleFonts.emilysCandy(
+                                      textStyle: TextStyle(
+                                        shadows: const <Shadow>[
+                                          Shadow(
+                                            offset: Offset(0.0, 4.0),
+                                            blurRadius: 4.0,
+                                            color: Color.fromARGB(255, 75, 75, 75),
+                                          ),
+                                        ],
+                                        fontSize: 32,
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: 'Emilys Candy',	
+                                        foreground: Paint()
+                                        ..style = PaintingStyle.stroke
+                                        ..strokeWidth = 7
+                                        ..color = Color.fromRGBO(203, 186, 186, 1)
+                                        ..strokeJoin = StrokeJoin.round
+                                      ),
                                     ),
                                   ),
                                   Text(
                                     'Vacinas',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 32,
-                                      fontWeight: FontWeight.bold,
+                                    style: GoogleFonts.emilysCandy(
+                                      textStyle: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 32,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                   ),
                                 ]
                               ),
                               ElevatedButton.icon(
-                                label: const Text(
+                                label: Text(
                                   '+ Adicionar',
-                                  style: TextStyle(
-                                    color: Color.fromRGBO(203, 186, 186, 1),
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
+                                  style: GoogleFonts.emilysCandy( 
+                                    textStyle: TextStyle(
+                                      color: Color.fromRGBO(203, 186, 186, 1),
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ),
                                 style: ElevatedButton.styleFrom(
@@ -303,10 +319,12 @@ class _PetDetailsScreenState extends State<PetDetailsScreen> {
                           _isLoading
                               ? const Center(child: CircularProgressIndicator())
                               : _vaccines.isEmpty
-                                  ? const Center(
+                                  ? Center(
                                       child: Text(
                                         'Nenhuma vacina registrada.',
-                                        style: TextStyle(fontSize: 16),
+                                        style: GoogleFonts.itim( 
+                                          textStyle: TextStyle(fontSize: 16),
+                                        ),
                                       ),
                                     )
                                   : ListView.builder(

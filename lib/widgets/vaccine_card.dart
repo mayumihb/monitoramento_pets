@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../models/vaccine.dart';
 import 'package:intl/intl.dart';
 
@@ -54,10 +55,12 @@ class VaccineCard extends StatelessWidget {
                     // Vaccine name
                     Text(
                       vaccine.name,
-                      style: const TextStyle(
-                        color: Color.fromRGBO(157, 119, 119, 1),
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.bold,
+                      style: GoogleFonts.itim( 
+                        textStyle: TextStyle(
+                          color: Color.fromRGBO(157, 119, 119, 1),
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -68,9 +71,11 @@ class VaccineCard extends StatelessWidget {
                         Expanded(
                           child: Text(
                             'Última aplicação: $formattedDate',
-                            style: const TextStyle(
-                              fontSize: 14,
-                              color: Color.fromRGBO(157, 119, 119, 1),
+                            style: GoogleFonts.itim( 
+                              textStyle: TextStyle(
+                                fontSize: 14,
+                                color: Color.fromRGBO(157, 119, 119, 1),
+                              ),
                             ),
                           ),
                         ),
@@ -92,16 +97,18 @@ class VaccineCard extends StatelessWidget {
                         Expanded(
                           child: Text(
                             'Próxima dose: $formattedNextDueDate',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: isOverdue
-                                  ? Colors.red
-                                  : isDueSoon
-                                      ? Colors.orange
-                                      : const Color.fromRGBO(157, 119, 119, 1),
-                              fontWeight: isOverdue || isDueSoon
-                                  ? FontWeight.bold
-                                  : FontWeight.normal,
+                            style: GoogleFonts.itim( 
+                              textStyle: TextStyle(
+                                fontSize: 14,
+                                color: isOverdue
+                                    ? Colors.red
+                                    : isDueSoon
+                                        ? Colors.orange
+                                        : const Color.fromRGBO(157, 119, 119, 1),
+                                fontWeight: isOverdue || isDueSoon
+                                    ? FontWeight.bold
+                                    : FontWeight.normal,
+                              ),
                             ),
                           ),
                         ),
@@ -117,9 +124,11 @@ class VaccineCard extends StatelessWidget {
                           Expanded(
                             child: Text(
                               'Observações: ${vaccine.notes}',
-                              style: const TextStyle(
-                                fontSize: 14,
-                                color: Color.fromRGBO(157, 119, 119, 1),
+                              style: GoogleFonts.itim( 
+                                textStyle: TextStyle(
+                                  fontSize: 14,
+                                  color: Color.fromRGBO(157, 119, 119, 1),
+                                ),
                               ),
                             ),
                           ),

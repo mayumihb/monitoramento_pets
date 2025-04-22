@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../models/pet.dart';
 import '../services/database_service.dart';
 
@@ -20,7 +21,7 @@ class _PetFormScreenState extends State<PetFormScreen> {
   DateTime _birthdate = DateTime.now();
   final List<String> _speciesList = ['Cachorro', 'Gato', 'Ave', 'Roedor', 'Outro'];
 
-  static const primaryColor = Color(0xFFD3C5E1);
+  static const primaryColor = Color(0xFFB3A2C4);
 
   @override
   void initState() {
@@ -97,10 +98,12 @@ class _PetFormScreenState extends State<PetFormScreen> {
               ),
               Text(
                 widget.pet == null ? 'Adicionar Pet' : 'Editar Pet',
-                style: const TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
+                style: GoogleFonts.emilysCandy( 
+                  textStyle: TextStyle(
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
                 ),
               ),
               const SizedBox(width: 40), // espaço para equilibrar o layout
